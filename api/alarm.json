@@ -1,0 +1,21 @@
+{
+  "sensors": [
+    {
+      "id": 1,
+      "name": "Front Door",
+      "state": "off"
+    },
+    {
+      "id": 2,
+      "name": "Rear Door",
+      "state": "off"
+    },
+    {
+      "id": 3,
+      "name": "Launge PIR",
+      "state": "off"
+    }
+  ],
+  "isActive": false,
+  "isTriggered": false
+}
