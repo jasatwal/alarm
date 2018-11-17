@@ -6,7 +6,7 @@ const fs = require('fs');
 const readFile = util.promisify(fs.readFile);
 const writeFile = util.promisify(fs.writeFile);
 
-const Sensor = require('./sensor');
+const { Sensor, SENSOR_STATE_ON } = require('./sensor');
 
 class Alarm extends EventEmitter {
   constructor(sensors) {
@@ -15,7 +15,6 @@ class Alarm extends EventEmitter {
     this.sensors = sensors;
     for (let sensor of this.sensors) {
       sensor.on('stateChange', e => this.sensorStateChange(e));
-      sensor.start();
     }
   }
 
@@ -23,7 +22,7 @@ class Alarm extends EventEmitter {
     const data = await readFile('alarm.json');
       // TODO: Look into validating the schema.
     const alarmJson = JSON.parse(data);
-    return new Alarm(alarmJson.sensors.map(sensorJson => new Sensor(sensorJson.id, sensorJson.name)));
+    return new Alarm(alarmJson.sensors.map(sensorJson => new Sensor(sensorJson.id, sensorJson.name, sensorJson.pin)));
   }
 
   async save() {
@@ -33,7 +32,7 @@ class Alarm extends EventEmitter {
 
   sensorStateChange(e) {
     const { sensor } = e;
-    if (sensor.state == 'on' && this.isActive && !this.isTriggered) {
+    if (sensor.state == SENSOR_STATE_ON && this.isActive && !this.isTriggered) {
       this.isTriggered = true;
       this.emit('trigger', { sensor });
     }
