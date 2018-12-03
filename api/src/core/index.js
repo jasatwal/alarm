@@ -1,4 +1,5 @@
-const Alarm = require('./alarm');
-const Sensor = require('./sensor');
+"use strict";
 
-module.exports = { Alarm, Sensor };
+const Alarm = require('./alarm');
+
+module.exports = { Alarm };

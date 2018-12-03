@@ -1,5 +1,5 @@
 // chrome://serviceworker-internals/
-import idb from 'idb';
+//import idb from 'idb';
 
 self.addEventListener('install', function(event) {
   console.log('my install', event);

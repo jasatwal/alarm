@@ -6,7 +6,7 @@ const fs = require('fs');
 const readFile = util.promisify(fs.readFile);
 const writeFile = util.promisify(fs.writeFile);
 
-const { Sensor, SENSOR_STATE_ON } = require('./sensor');
+const { createSensor, SENSOR_STATE_ON } = require('./sensors');
 
 class Alarm extends EventEmitter {
   constructor(sensors) {
@@ -15,6 +15,7 @@ class Alarm extends EventEmitter {
     this.sensors = sensors;
     for (let sensor of this.sensors) {
       sensor.on('stateChange', e => this.sensorStateChange(e));
+      sensor.start();
     }
   }
 
@@ -22,7 +23,7 @@ class Alarm extends EventEmitter {
     const data = await readFile('alarm.json');
       // TODO: Look into validating the schema.
     const alarmJson = JSON.parse(data);
-    return new Alarm(alarmJson.sensors.map(sensorJson => new Sensor(sensorJson.id, sensorJson.name, sensorJson.pin)));
+    return new Alarm(alarmJson.sensors.map(sensorJson => createSensor(process.env.SENSOR_STRATEGY, sensorJson)));
   }
 
   async save() {

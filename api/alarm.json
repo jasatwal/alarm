@@ -3,7 +3,6 @@
     {
       "id": 1,
       "name": "Front Door",
-      "pin": 4,
       "state": "off"
     },
     {
@@ -14,7 +13,7 @@
     {
       "id": 3,
       "name": "Launge PIR",
-      "state": "off"
+      "state": "on"
     }
   ],
   "isActive": false,

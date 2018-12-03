@@ -1,6 +1,7 @@
 "use strict";
 
 // https://www.slideshare.net/nordicapis/the-rest-and-then-some
+require('dotenv').config();
 
 const express = require('express');
 const http = require('http');
@@ -9,11 +10,8 @@ const cors = require('cors');
 const bodyParser = require('body-parser')
 const webpush = require('web-push');
 
-const { Alarm, SensorLog } = require('./src/core');
+const { Alarm } = require('./src/core');
 const { SubscriptionRepository } = require('./src/subscriptions');
-
-// https://www.npmjs.com/package/dotenv
-const appsettings = require('./appsettings.json');
 //const subscriptions = require('./subscriptions.json').subscriptions;
 
 const app = express();
@@ -21,9 +19,9 @@ const server = http.createServer(app);
 const io = socketIO(server);
 
 webpush.setVapidDetails(
-  appsettings.vapidDetails.subject, 
-  appsettings.vapidDetails.publicKey,
-  appsettings.vapidDetails.privateKey
+  process.env.VAPID_SUBJECT, 
+  process.env.VAPID_PUBLICKEY,
+  process.env.VAPID_PRIVATEKEY
 );
 
 async function sendMessage(subscription, dataToSend) {
