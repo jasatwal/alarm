@@ -11,8 +11,8 @@ const bodyParser = require('body-parser')
 const webpush = require('web-push');
 
 const { Alarm } = require('./src/core');
-const { SubscriptionRepository } = require('./src/subscriptions');
-//const subscriptions = require('./subscriptions.json').subscriptions;
+const SubscriptionRepository = require('./src/subscriptions/domain/subscriptionRepository');
+const subscriptionController = require('./src/subscriptions/controllers/subscriptionController');
 
 const app = express();
 const server = http.createServer(app);
@@ -85,6 +85,8 @@ function startServer(alarm) {
   app.use(bodyParser.json());
 
   app.options('*', cors());
+
+  app.use('/api/subscriptions', subscriptionController);
 
   app.get('/api', async (req, res) => {
     res.send(getAlarmRepresentation(alarm));
@@ -159,24 +161,6 @@ function startServer(alarm) {
   app.get('/api/sensors/logs?:sensor', (req, res) => {
     const logs = SensorLog.findBySensor(parseInt(req.params.sensor));
     res.send(logs);
-  });
-
-  app.post('/api/subscriptions', async (req, res) => {
-    const subscription = req.body;
-    const repository = new SubscriptionRepository();
-    await repository.add(subscription);
-    res.status(201).send();
-  });
-
-  app.delete('/api/subscriptions/:id', (req, res) => {
-    
-  });
-
-  app.post('/api/send', (req, res) => {
-    subscriptions.forEach(subscription => {
-      sendMessage(subscription, 'Hello World!');
-    });
-    res.send();
   });
 
   server.listen(3001, () => console.log('Example app listening on port 3001!'));
