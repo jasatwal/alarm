@@ -8,35 +8,13 @@ const http = require('http');
 const socketIO = require('socket.io');
 const cors = require('cors');
 const bodyParser = require('body-parser')
-const webpush = require('web-push');
 
 const { Alarm } = require('./src/core');
-const SubscriptionRepository = require('./src/notifications/domain/subscriptionRepository');
-const subscriptionController = require('./src/notifications/controllers/subscriptionController');
+const notifications = require('./src/notifications');
 
 const app = express();
 const server = http.createServer(app);
 const io = socketIO(server);
-
-webpush.setVapidDetails(
-  process.env.VAPID_SUBJECT, 
-  process.env.VAPID_PUBLICKEY,
-  process.env.VAPID_PRIVATEKEY
-);
-
-async function sendMessage(subscription, dataToSend) {
-  try {
-    await webpush.sendNotification(subscription, dataToSend);
-  } catch (error) {
-    console.log('Error', error);
-    if (error.statusCode === 410) {
-      console.log('Deleting subscription...');
-      await new SubscriptionRepository().remove(subscription);
-    } else {
-      console.log('Subscription is no longer valid: ', error);
-    }
-  }
-};
 
 function getAlarmRepresentation(alarm) {
   const operations = [];
@@ -86,9 +64,9 @@ function startServer(alarm) {
 
   app.options('*', cors());
 
-  app.use('/api/subscriptions', subscriptionController);
+  app.use('/api/subscriptions', notifications.controller);
 
-  app.get('/api', async (req, res) => {
+  app.get('/api', async (_, res) => {
     res.send(getAlarmRepresentation(alarm));
   });
 
@@ -183,10 +161,7 @@ function startServer(alarm) {
 function setupNotifications(alarm) {
   alarm.on('trigger', async e => {
     console.log('Triggered!');
-    const subscriptions = await new SubscriptionRepository().getAll();
-    for (let subscription of subscriptions) {
-      await sendMessage(subscription, JSON.stringify({ text: 'Alarm Triggered!', when: Date.now(), sensor: e.sensor.Id }));
-    }
+    await notifications.send({ text: 'Alarm Triggered!', when: Date.now(), sensor: e.sensor.Id });
   });
 }
 

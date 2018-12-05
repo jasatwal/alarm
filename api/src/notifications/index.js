@@ -1,3 +1,4 @@
-const SubscriptionRepository = require('./subscriptionRepository');
+const controller = require('./controllers/subscriptionController');
+const send = require('./domain/sendNotification');
 
-module.exports = { SubscriptionRepository };
+module.exports = { controller, send };
