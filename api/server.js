@@ -11,8 +11,8 @@ const bodyParser = require('body-parser')
 const webpush = require('web-push');
 
 const { Alarm } = require('./src/core');
-const SubscriptionRepository = require('./src/subscriptions/domain/subscriptionRepository');
-const subscriptionController = require('./src/subscriptions/controllers/subscriptionController');
+const SubscriptionRepository = require('./src/notifications/domain/subscriptionRepository');
+const subscriptionController = require('./src/notifications/controllers/subscriptionController');
 
 const app = express();
 const server = http.createServer(app);
