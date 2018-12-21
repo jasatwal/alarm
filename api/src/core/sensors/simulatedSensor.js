@@ -35,8 +35,7 @@ class SimulatedSensor extends EventEmitter {
   toJSON() {
     return {
       id: this.id,
-      name: this.name,
-      state: this.state
+      name: this.name
     };
   }  
 }

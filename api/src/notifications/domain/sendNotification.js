@@ -1,7 +1,7 @@
 "use strict";
 
 const webpush = require('web-push');
-const subscriptionRepository = require('./subscriptionRepository');
+const subscriptionRepository = require('./subscriptionRepository')();
 
 webpush.setVapidDetails(
   process.env.VAPID_SUBJECT, 
@@ -15,12 +15,11 @@ async function sendNotification(data) {
     try {
       await webpush.sendNotification(subscription, JSON.stringify(data));
     } catch (error) {
-      console.log('Error', error);
       if (error.statusCode === 410) {
-        console.log('Deleting subscription...');
+        console.info('Deleting subscription...');
         await subscriptionRepository.remove(subscription);
       } else {
-        console.log('Subscription is no longer valid: ', error);
+        console.Error('Subscription is no longer valid: ', error, subscription);
       }
     }
   }

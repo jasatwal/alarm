@@ -1,48 +1,58 @@
+// TODO: Generating an unique ID may not be necessary as the endpoint URL could serve that purpose.
+
 "use strict";
 
 const crypto = require("crypto");
-const util = require('util');
 const fs = require('fs');
+const util = require('util');
 const readFile = util.promisify(fs.readFile);
 const writeFile = util.promisify(fs.writeFile);
 
-const FILE_NAME = 'subscriptions.json';
-
 function generateId() {
-  return crypto.randomBytes(16).toString("hex");  
+  return crypto.randomBytes(16).toString('hex');  
 }
 
-async function getAll() {
-  const data = JSON.parse(await readFile(FILE_NAME));
-  return data.subscriptions || [];
+async function read(fileName) {
+  return JSON.parse(await readFile(fileName));
 }
 
-async function add(subscription) {
-  if (subscription) {
-    subscription.id = generateId();
-    const data = JSON.parse(await readFile(FILE_NAME));
-    data.subscriptions.push(subscription);
-    await writeFile(FILE_NAME, JSON.stringify(data, null, 2));
+async function write(fileName, data) {
+  await writeFile(fileName, JSON.stringify(data, null, 2));
+}
+
+class SubscriptionRepository {
+  constructor(fileName) {
+    this.fileName = fileName;
   }
-}
 
-async function remove(subscription) {
-  const id = typeof subscription === "number" ? subscription : subscription.id;
-  if (id) {
-    const data = JSON.parse(await readFile(FILE_NAME));
-    for (let index in data.subscriptions) {
-      const existingSubscription = data.subscriptions[index];
-      if (existingSubscription.id === id) {
-        data.subscriptions.splice(index, 1);
-        break;
-      }
+  async getAll() {
+    const data = await read(this.fileName);
+    return data.subscriptions || [];
+  }
+
+  async add(subscription) {
+    if (subscription) {
+      subscription.id = generateId();
+      const data = await read(this.fileName);
+      data.subscriptions.push(subscription);
+      await write(this.fileName, data);
     }
-    await writeFile(FILE_NAME, JSON.stringify(data, null, 2));
+  }
+
+  async remove(subscription) {
+    const id = subscription.id || subscription;
+    if (id) {
+      const data = await read(this.fileName);
+      for (let index in data.subscriptions) {
+        const existingSubscription = data.subscriptions[index];
+        if (existingSubscription.id === id) {
+          data.subscriptions.splice(index, 1);
+          break;
+        }
+      }
+      await write(this.fileName, data);
+    }
   }
 }
 
-module.exports = {
-  getAll,
-  add,
-  remove
-};
+module.exports = (fileName = 'subscriptions.json') => new SubscriptionRepository(fileName);

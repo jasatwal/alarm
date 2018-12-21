@@ -2,20 +2,18 @@
   "sensors": [
     {
       "id": 1,
-      "name": "Front Door",
-      "state": "off"
+      "name": "Front Door"
     },
     {
       "id": 2,
-      "name": "Rear Door",
-      "state": "off"
+      "name": "Rear Door"
     },
     {
       "id": 3,
-      "name": "Launge PIR",
-      "state": "on"
+      "name": "Launge PIR"
     }
   ],
-  "isActive": false,
-  "isTriggered": false
+  "state": {
+    "$type": "DeactiveAlarmState"
+  }
 }

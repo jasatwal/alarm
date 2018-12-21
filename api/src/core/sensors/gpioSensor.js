@@ -43,7 +43,6 @@ class GpioSensor extends EventEmitter {
     return {
       id: this.id,
       name: this.name,
-      state: this.state,
       pin: this.pin
     };
   }

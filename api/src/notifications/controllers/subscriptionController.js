@@ -1,18 +1,21 @@
 "use strict";
 
 const express = require('express');
-const router = express.Router();
-const { SubscriptionRepository } = require('../domain/subscriptionRepository');
 
-router.post('/', async (req, res) => {
-  const subscription = req.body;
-  const repository = new SubscriptionRepository();
-  await repository.add(subscription);
-  res.status(201).send();
-});
+function factory(subscriptionRepository) {
+  const router = express.Router();
 
-router.delete('/:id', (req, res) => {
+  router.post('/', async (req, res) => {
+    const subscription = req.body;
+    await subscriptionRepository.add(subscription);
+    res.status(201).send();
+  });
   
-});
+  router.delete('/:id', (req, res) => {
+    
+  });
 
-module.exports = router;
+  return router;
+}
+
+module.exports = factory;

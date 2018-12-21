@@ -1,4 +1,10 @@
-const controller = require('./controllers/subscriptionController');
-const send = require('./domain/sendNotification');
+"use strict";
 
-module.exports = { controller, send };
+const subscriptionControllerFactory = require('./controllers/subscriptionController');
+const subscriptionRepositoryFactory = require('./domain/subscriptionRepository');
+const sendNotification = require('./domain/sendNotification');
+
+module.exports = { 
+  subscriptionController: subscriptionControllerFactory(subscriptionRepositoryFactory()), 
+  sendNotification
+};
