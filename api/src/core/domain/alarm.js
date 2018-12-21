@@ -2,7 +2,7 @@
 
 const EventEmitter = require('events');
 const { createSensor, SENSOR_STATE_ON } = require('./sensors');
-const { DeactiveAlarmState, alaramStatefactory } = require('./domain/alarmStates');
+const { DeactiveAlarmState, alaramStatefactory } = require('./alarmStates');
 
 class Alarm extends EventEmitter {
   constructor(sensors = [], state = new DeactiveAlarmState()) {
