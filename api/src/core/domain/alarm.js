@@ -33,7 +33,7 @@ class Alarm extends EventEmitter {
 
   sensorStateChange(e) {
     const { sensor } = e;
-    if (sensor.state == SENSOR_STATE_ON) {
+    if (sensor.state === SENSOR_STATE_ON) {
       this.state.trigger(sensor);
     }
     this.emit('sensorStateChange', { sensor });

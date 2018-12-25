@@ -1,7 +1,6 @@
 "use strict";
 
 const EventEmitter = require('events');
-// https://www.npmjs.com/package/pigpio#installation
 const Gpio = require('pigpio').Gpio;
 const { SENSOR_STATE_ON, SENSOR_STATE_OFF } = require('./consts');
 
@@ -15,8 +14,8 @@ class GpioSensor extends EventEmitter {
   }
 
   start() {
-    if (typeof pin === 'number') {
-      this.gpio = new Gpio(pin, {
+    if (typeof this.pin === 'number') {
+      this.gpio = new Gpio(this.pin, {
         mode: Gpio.INPUT,
         pullUpDown: Gpio.PUD_DOWN,
         edge: Gpio.EITHER_EDGE
@@ -43,6 +42,7 @@ class GpioSensor extends EventEmitter {
     return {
       id: this.id,
       name: this.name,
+      state: this.state,
       pin: this.pin
     };
   }

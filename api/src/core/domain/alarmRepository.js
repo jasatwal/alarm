@@ -13,7 +13,6 @@ class AlarmRepository {
 
   async get() {
     const data = await readFile(this.fileName);
-    // TODO: Look into validating the schema.
     const alarmJson = JSON.parse(data);
     return Alarm.createUsingOptions(alarmJson);
   }
