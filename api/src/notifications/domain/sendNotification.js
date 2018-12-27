@@ -19,7 +19,7 @@ async function sendNotification(data) {
         console.info('Deleting subscription...');
         await subscriptionRepository.remove(subscription);
       } else {
-        console.Error('Subscription is no longer valid: ', error, subscription);
+        console.error('Subscription is no longer valid: ', error, subscription);
       }
     }
   }
