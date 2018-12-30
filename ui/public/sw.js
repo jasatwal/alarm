@@ -9,16 +9,15 @@ self.addEventListener('push', function(event) {
   console.log('[Service Worker] Push Received.');
 
   const notification = event.data.json();
-  const title = 'Push Codelab';
   const options = {
-    body: notification.text,
+    body: notification.sensor.name,
     icon: 'images/icon.png',
     badge: 'images/badge.png'
   };
 
 
 
-  event.waitUntil(self.registration.showNotification(title, options));
+  event.waitUntil(self.registration.showNotification(notification.title, options));
 
   // TODO: v2 - Store in local DB
 });

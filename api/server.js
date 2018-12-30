@@ -46,7 +46,7 @@ async function setupNotifications() {
   alarm.on('trigger', async e => {
     console.info('Triggered!');
     await alarmRepository.save(alarm);
-    await sendNotification({ text: 'Alarm Triggered!', when: Date.now(), sensor: e.sensor.Id });
+    await sendNotification({ title: 'Alarm Triggered!', when: Date.now(), sensor: e.sensor });
   });
 }
 
