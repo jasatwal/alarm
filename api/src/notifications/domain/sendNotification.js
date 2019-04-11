@@ -17,10 +17,10 @@ async function sendNotification(data) {
     } catch (error) {
       if (error.statusCode === 410) {
         console.info('Deleting subscription...');
-        await subscriptionRepository.remove(subscription);
       } else {
         console.error('Subscription is no longer valid: ', error, subscription);
       }
+      await subscriptionRepository.remove(subscription);
     }
   }
 };

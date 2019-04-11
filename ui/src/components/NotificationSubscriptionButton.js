@@ -58,7 +58,7 @@ export default class SubscriptionButton extends Component {
       const subscribeOptions = {
         userVisibleOnly: true,
         applicationServerKey: urlBase64ToUint8Array(
-          'BH4A3cBLCQSwQ5rrjh7VAGyIcb1TgttZaxzYcXPJzCdxGUn0FgnVwHF-zcET-g8qkT51eUiA6x74ulxyNTsYyhw'
+          'BPh8fk5CtJ_oATMSk18R7_qUPmlGC6-geArdWfWeW6JNQXpj5MT3shy0j1GGt2V5hK_YliR2ZP9pVDxDttnQFi0'
         )
       };
 
