@@ -31,6 +31,8 @@ class GpioSensor extends EventEmitter {
           this.emit('stateChange', { sensor: this });
         }
       });
+
+      console.info(`Connected to pin ${this.pin} (state=${this.state})`);
     }
   }
 

@@ -34,7 +34,7 @@ class SubscriptionRepository {
     if (subscription) {
       subscription.id = generateId();
       const data = await read(this.fileName);
-      data.subscriptions.push(subscription);
+      (data.subscriptions || (data.subscriptions = [])).push(subscription);
       await write(this.fileName, data);
     }
   }
@@ -43,7 +43,7 @@ class SubscriptionRepository {
     const id = subscription.id || subscription;
     if (id) {
       const data = await read(this.fileName);
-      for (let index in data.subscriptions) {
+      for (let index in data.subscriptions || []) {
         const existingSubscription = data.subscriptions[index];
         if (existingSubscription.id === id) {
           data.subscriptions.splice(index, 1);

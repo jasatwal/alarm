@@ -35,7 +35,7 @@ async function setupSocketIO() {
   const alarm = await alarmRepository.get();
   for (let sensor of alarm.sensors) {
     sensor.on('stateChange', e => {
-      console.info('sensor state changed', e.sensor.id, e.sensor.state);
+      console.info('sensor state changed', e.sensor.name, e.sensor.state);
       io.sockets.emit('sensorStateChange', e.sensor);
     });
   }  
