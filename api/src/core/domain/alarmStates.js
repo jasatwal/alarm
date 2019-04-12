@@ -84,7 +84,7 @@ module.exports = {
   ActiveAlarmState,
   DeactiveAlarmState,
   TriggeredAlarmState,
-  alaramStatefactory: (type, options) => {
+  alarmStatefactory: (type, options) => {
     switch (type) {
       case 'ActiveAlarmState': return new ActiveAlarmState();
       case 'DeactiveAlarmState': return new DeactiveAlarmState();
