@@ -18,12 +18,14 @@ class GpioSensor extends EventEmitter {
       this.gpio = new Gpio(this.pin, {
         mode: Gpio.INPUT,
         pullUpDown: Gpio.PUD_DOWN,
-        edge: Gpio.EITHER_EDGE
+        edge: Gpio.EITHER_EDGE,
+        alert: true
       });
 
       this.state = this.gpio.digitalRead() ? SENSOR_STATE_ON : SENSOR_STATE_OFF;
+      this.gpio.glitchFilter(10000);
 
-      this.gpio.on('interrupt', level => {
+      this.gpio.on('alert', level => {
         const previousState = this.state;
         this.state = level ? SENSOR_STATE_ON : SENSOR_STATE_OFF;
         
@@ -33,6 +35,8 @@ class GpioSensor extends EventEmitter {
       });
 
       console.info(`Connected to pin ${this.pin} (state=${this.state})`);
+    } else {
+      console.warn(`Pin not set for sensor '${this.name}'.`);
     }
   }
 
