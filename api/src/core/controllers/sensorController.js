@@ -15,7 +15,7 @@ function factory(alarmRepository) {
           rel: 'logs',
           href: '/api/sensors/logs'
         }],
-        items: alarm.sensors.map(sensor => {
+        items: alarm.sensors.filter(sensor => sensor.enabled).map(sensor => {
           return {
             href: `/api/sensors/${sensor.id}`,
             data: [

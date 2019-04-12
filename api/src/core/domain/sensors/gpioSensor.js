@@ -5,16 +5,26 @@ const Gpio = require('pigpio').Gpio;
 const { SENSOR_STATE_ON, SENSOR_STATE_OFF } = require('./consts');
 
 class GpioSensor extends EventEmitter {
-  constructor({ id, name, pin }) {
+  constructor({ id, name, pin, enabled }) {
     super();
     this.id = id;
     this.name = name;
     this.pin = pin;
+    this.enabled = enabled;
     this.state = SENSOR_STATE_OFF;
   }
 
+  enable() {
+    this.enabled = true;
+  }
+
+  disable() {
+    this.enabled = false;
+    stop();
+  }
+
   start() {
-    if (typeof this.pin === 'number') {
+    if (this.enabled && typeof this.pin === 'number') {
       this.gpio = new Gpio(this.pin, {
         mode: Gpio.INPUT,
         pullUpDown: Gpio.PUD_DOWN,
@@ -35,7 +45,7 @@ class GpioSensor extends EventEmitter {
       });
 
       console.info(`Connected to pin ${this.pin} (state=${this.state})`);
-    } else {
+    } else if (this.enabled) {
       console.warn(`Pin not set for sensor '${this.name}'.`);
     }
   }
@@ -49,7 +59,8 @@ class GpioSensor extends EventEmitter {
       id: this.id,
       name: this.name,
       state: this.state,
-      pin: this.pin
+      pin: this.pin,
+      enabled: this.enabled
     };
   }
 }

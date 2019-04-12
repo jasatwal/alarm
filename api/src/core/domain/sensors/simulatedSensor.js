@@ -8,35 +8,48 @@ function randomDelay(min, max) {
 }
 
 class SimulatedSensor extends EventEmitter {
-  constructor({ id, name }) {
+  constructor({ id, name, enabled }) {
     super();
     this.id = id;
     this.name = name;
+    this.enabled = enabled;
     this.state = SENSOR_STATE_OFF; 
   }
 
+  enable() {
+    this.enabled = true;
+  }
+
+  disable() {
+    this.enabled = false;
+    stop();
+  }  
+
   start() {
-    this.timer = setInterval(() => {
-      this.state = SENSOR_STATE_ON;
-      this.emit('stateChange', { sensor: this });
-      setTimeout(() => {
-        this.state = SENSOR_STATE_OFF;
+    if (this.enabled) {
+      this.timer = setInterval(() => {
+        this.state = SENSOR_STATE_ON;
         this.emit('stateChange', { sensor: this });
-      }, randomDelay(1000, 3000));
-    }, randomDelay(5000, 10000));   
+        setTimeout(() => {
+          this.state = SENSOR_STATE_OFF;
+          this.emit('stateChange', { sensor: this });
+        }, randomDelay(1000, 3000));
+      }, randomDelay(5000, 10000));
+    }
   }
 
   stop() {
     if (this.timer) {
       clearInterval(this.timer);
     }
-  }
+  } 
 
   toJSON() {
     return {
       id: this.id,
       name: this.name,
-      state: this.state
+      state: this.state,
+      enabled: this.enabled
     };
   }  
 }
