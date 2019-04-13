@@ -55,14 +55,13 @@ class TriggeredAlarmState extends ActiveAlarmState {
     if (!sensor) {
       throw new Error('sensor not specified.');
     }
-    this.sensor = sensor;
+    this.first = sensor;
   }
 
   initialize(context) {
     super.initialize(context);
-    setImmediate(() => {
-      context.emit('trigger', { sensor: this.sensor });
-    });
+    this.context = context;
+    this.emitEvent(this.first);
   }
 
   deactivate() {
@@ -70,12 +69,22 @@ class TriggeredAlarmState extends ActiveAlarmState {
   }
 
   trigger(sensor) {
+    // Another sensor or the same sensor has triggered again.
+    if (this.context.settings.triggerMultipleTimes) {
+      this.emitEvent(sensor);
+    }
+  }
+
+  emitEvent(sensor) {
+    setImmediate(() => {
+      this.context.emit('trigger', { sensor });
+    });
   }
 
   toJSON() {
     return {
       $type: 'TriggeredAlarmState',
-      sensor: this.sensor
+      sensor: this.first
     }
   }
 }

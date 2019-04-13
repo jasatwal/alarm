@@ -5,10 +5,11 @@ const { SENSOR_STATE_ON } = require('./sensors');
 const { DeactiveAlarmState } = require('./alarmStates');
 
 class Alarm extends EventEmitter {
-  constructor(sensors = [], state = new DeactiveAlarmState()) {
+  constructor(sensors = [], state = new DeactiveAlarmState(), settings = {}) {
     super();
     this.sensors = sensors;
     this.setState(state);
+    this.settings = settings;
 
     for (let sensor of this.sensors) {
       sensor.on('stateChange', e => this.sensorStateChange(e));
@@ -52,7 +53,8 @@ class Alarm extends EventEmitter {
   toJSON() {
     return {
       sensors: this.sensors,
-      state: this.state.toJSON()
+      state: this.state.toJSON(),
+      settings: this.settings
     }
   }
 }

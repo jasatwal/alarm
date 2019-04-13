@@ -19,10 +19,12 @@ class AlarmRepository {
     return this.createFromJson(alarmJson);
   }
 
-  createFromJson({ sensors = [], state = { $type: 'DeactiveAlarmState' } }) {
+  createFromJson({ sensors = [], state = { $type: 'DeactiveAlarmState' }, settings = {}}) {
+    // TODO: Sensor object comparison issues when loading an alarm in TriggeredAlarmState.
     return new Alarm(
       sensors.map(sensorOptions => createSensor(process.env.SENSOR_STRATEGY, sensorOptions)),
-      alarmStatefactory(state.$type, state));
+      alarmStatefactory(state.$type, state),
+      settings);
   }  
 
   async save(alarm) {
