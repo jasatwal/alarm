@@ -5,6 +5,8 @@ const util = require('util');
 const readFile = util.promisify(fs.readFile);
 const writeFile = util.promisify(fs.writeFile);
 const Alarm = require('./alarm');
+const { createSensor } = require('./sensors');
+const { alarmStatefactory } = require('./alarmStates');
 
 class AlarmRepository {
   constructor(fileName) {
@@ -14,8 +16,14 @@ class AlarmRepository {
   async get() {
     const data = await readFile(this.fileName);
     const alarmJson = JSON.parse(data);
-    return Alarm.createUsingOptions(alarmJson);
+    return this.createFromJson(alarmJson);
   }
+
+  createFromJson({ sensors = [], state = { $type: 'DeactiveAlarmState' } }) {
+    return new Alarm(
+      sensors.map(sensorOptions => createSensor(process.env.SENSOR_STRATEGY, sensorOptions)),
+      alarmStatefactory(state.$type, state));
+  }  
 
   async save(alarm) {
     const alarmJson = JSON.stringify(alarm, null, 2);

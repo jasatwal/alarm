@@ -1,8 +1,8 @@
 "use strict";
 
 const EventEmitter = require('events');
-const { createSensor, SENSOR_STATE_ON } = require('./sensors');
-const { DeactiveAlarmState, alarmStatefactory } = require('./alarmStates');
+const { SENSOR_STATE_ON } = require('./sensors');
+const { DeactiveAlarmState } = require('./alarmStates');
 
 class Alarm extends EventEmitter {
   constructor(sensors = [], state = new DeactiveAlarmState()) {
@@ -14,12 +14,6 @@ class Alarm extends EventEmitter {
       sensor.on('stateChange', e => this.sensorStateChange(e));
       sensor.start();
     }    
-  }
-
-  static createUsingOptions({ sensors = [], state = { $type: 'DeactiveAlarmState' } }) {
-    return new Alarm(
-      sensors.map(sensorOptions => createSensor(process.env.SENSOR_STRATEGY, sensorOptions)),
-      alarmStatefactory(state.$type, state));
   }
 
   get active() {
