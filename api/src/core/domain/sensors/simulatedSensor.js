@@ -8,12 +8,13 @@ function randomDelay(min, max) {
 }
 
 class SimulatedSensor extends EventEmitter {
-  constructor({ id, name, enabled }) {
+  constructor({ id, name, enabled, ...additional }) {
     super();
     this.id = id;
     this.name = name;
     this.enabled = enabled;
     this.state = SENSOR_STATE_OFF; 
+    this.additional = additional;
   }
 
   enable() {
@@ -49,7 +50,8 @@ class SimulatedSensor extends EventEmitter {
       id: this.id,
       name: this.name,
       state: this.state,
-      enabled: this.enabled
+      enabled: this.enabled,
+      ...this.additional
     };
   }  
 }
