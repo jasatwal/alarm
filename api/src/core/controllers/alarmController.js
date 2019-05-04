@@ -62,7 +62,7 @@ function getAlarmRepresentation(alarm) {
       items: [{
         href: '/api',
         data: [
-          { name: 'state', value: alarm.isActive ? 'active' : 'deactive' }
+          { name: 'state', value: alarm.state.type }
         ]
       }],
       operations

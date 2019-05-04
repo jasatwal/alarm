@@ -5,7 +5,7 @@ const express = require('express');
 function factory(alarmRepository) {
   const router = express.Router();
 
-  router.get('/', async (req, res) => {
+  router.get('/', async (_, res) => {
     const alarm = await alarmRepository.get();
     const representation = {
       collection: {
@@ -20,7 +20,8 @@ function factory(alarmRepository) {
             href: `/api/sensors/${sensor.id}`,
             data: [
               { name: 'id', value: sensor.id },
-              { name: 'name', value: sensor.name }
+              { name: 'name', value: sensor.name },
+              { name: 'state', value: sensor.state }
             ]
           };
         })
@@ -47,7 +48,8 @@ function factory(alarmRepository) {
           items: [{
             data: [
               { name: 'id', value: sensor.id },
-              { name: 'name', value: sensor.name }
+              { name: 'name', value: sensor.name },
+              { name: 'state', value: sensor.state }
             ]
           }]
         }

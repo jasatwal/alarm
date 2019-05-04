@@ -1,7 +1,20 @@
 "use strict";
 
-class ActiveAlarmState {
+const AlarmStateType = {
+  ACTIVE: 'active',
+  DEACTIVE: 'deactive',
+  TRIGGERED: 'triggered'
+}
+
+class AlarmStateBase {
+  constructor(type) {
+    this.type = type;
+  }
+}
+
+class ActiveAlarmState extends AlarmStateBase {
   constructor() {
+    super(AlarmStateType.ACTIVE);
     this.active = true;
   }
 
@@ -27,9 +40,14 @@ class ActiveAlarmState {
   }
 }
 
-class DeactiveAlarmState {
+class DeactiveAlarmState extends AlarmStateBase {
+  constructor() {
+    super(AlarmStateType.DEACTIVE);
+  }
+
   initialize(context) {
     this.context = context;
+    this.type = AlarmStateType.DEACTIVE;
   }
   
   activate() {
@@ -56,6 +74,7 @@ class TriggeredAlarmState extends ActiveAlarmState {
       throw new Error('sensor not specified.');
     }
     this.first = sensor;
+    this.type = AlarmStateType.TRIGGERED;
   }
 
   initialize(context) {
@@ -90,6 +109,7 @@ class TriggeredAlarmState extends ActiveAlarmState {
 }
 
 module.exports = {
+  AlarmStateType,
   ActiveAlarmState,
   DeactiveAlarmState,
   TriggeredAlarmState,
