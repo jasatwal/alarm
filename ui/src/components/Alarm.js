@@ -6,20 +6,21 @@ import classNames from 'classnames';
 export default class Alarm extends Component {
   constructor(props) {
     super(props);
-    this.state = { text: 'Loading...' };
+    this.state = { text: 'Loading...', alarmState: 'Unknown' };
   }
 
   async componentDidMount() {
     const response = await fetch('/api');
-    const data = await response.json();
-    const operation = data.collection.operations[0];
-    this.setup(operation);
+    const json = await response.json();
+    const alarmState = json.collection.items[0].data[0].value;
+    const operation = json.collection.operations[0];
+    this.setup(operation, alarmState);
   }
 
-  setup(operation) {
+  setup(operation, alarmState) {
     this.operation = operation;
     const text = operation.prompt || `${operation.rel[0]}${operation.rel.substring(1)}`;
-    this.setState({ text });
+    this.setState({ text, alarmState });
   }
 
   async handleClick() {
@@ -32,14 +33,20 @@ export default class Alarm extends Component {
       }
     });
     const json = await response.json();
+    const alarmState = json.collection.items[0].data[0].value;
     const operation = json.collection.operations[0];
-    this.setup(operation);
+    this.setup(operation, alarmState);
   }
 
   render() {
     return (
       <div>
-        <AlarmButton text={this.state.text} onClick={this.handleClick.bind(this)} />
+        <div>
+          <AlarmButton text={this.state.text} onClick={this.handleClick.bind(this)} />
+        </div>
+        <div>
+          CurrentState: {this.state.alarmState}
+        </div>
       </div>
     )
   }
